@@ -4,7 +4,7 @@
 
 // 👉 Change ce numéro (v2, v3...) à chaque fois que tu modifies
 // index.html, style.css ou app.js, pour forcer la mise à jour du cache.
-const VERSION_DU_CACHE = "undercover-v8";
+const VERSION_DU_CACHE = "undercover-v9";
 
 // Liste de tous les fichiers à garder en mémoire pour le mode hors ligne.
 const FICHIERS_A_METTRE_EN_CACHE = [
@@ -22,7 +22,12 @@ const FICHIERS_A_METTRE_EN_CACHE = [
 self.addEventListener("install", function (evenement) {
   evenement.waitUntil(
     caches.open(VERSION_DU_CACHE).then(function (cache) {
-      return cache.addAll(FICHIERS_A_METTRE_EN_CACHE);
+      // cache: "reload" force le téléchargement de la dernière version de chaque
+      // fichier, au lieu de reprendre une vieille copie gardée par le navigateur.
+      const requetes = FICHIERS_A_METTRE_EN_CACHE.map(function (fichier) {
+        return new Request(fichier, { cache: "reload" });
+      });
+      return cache.addAll(requetes);
     })
   );
   // Active tout de suite la nouvelle version sans attendre.

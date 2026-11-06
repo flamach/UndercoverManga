@@ -19,6 +19,7 @@ html, body {
 .ecran {
   display: flex;
   flex-direction: column;
+  justify-content: center; /* contenu centré verticalement */
   gap: 12px;
   min-height: 100dvh;
   max-width: 500px;
@@ -218,7 +219,7 @@ button:disabled {
 .bouton-principal {
   background: linear-gradient(135deg, #9b6dff, #6a3df0);
   box-shadow: 0 6px 20px rgba(124, 77, 255, 0.4);
-  margin-top: auto;
+  margin-top: 12px;
 }
 
 .bouton-principal:disabled {
@@ -330,7 +331,7 @@ button:disabled {
   align-items: center;
   justify-content: center;
   min-height: 160px;
-  margin: auto 0;
+  margin: 24px 0;
   padding: 16px;
   border-radius: 24px;
   border: 3px solid #3d3758;
