@@ -23,7 +23,8 @@ html, body {
   min-height: 100dvh;
   max-width: 500px;
   margin: 0 auto;
-  padding: 24px 20px calc(24px + env(safe-area-inset-bottom));
+  /* env(safe-area-inset-...) = zones cachées par l'encoche / la Dynamic Island de l'iPhone */
+  padding: calc(24px + env(safe-area-inset-top)) 20px calc(24px + env(safe-area-inset-bottom));
 }
 
 /* L'attribut "hidden" doit vraiment cacher l'élément */

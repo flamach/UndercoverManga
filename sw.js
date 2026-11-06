@@ -4,7 +4,7 @@
 
 // 👉 Change ce numéro (v2, v3...) à chaque fois que tu modifies
 // index.html, style.css ou app.js, pour forcer la mise à jour du cache.
-const VERSION_DU_CACHE = "undercover-v7";
+const VERSION_DU_CACHE = "undercover-v8";
 
 // Liste de tous les fichiers à garder en mémoire pour le mode hors ligne.
 const FICHIERS_A_METTRE_EN_CACHE = [
