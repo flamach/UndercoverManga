@@ -55,6 +55,22 @@ function normaliser(texte) {
 // Mots
 // ============================================================
 
+// Écrit le mot dans l'élément "cible". Si le mot finit par un texte entre
+// parenthèses, comme "Zoro (One Piece)", ce texte est écrit en plus petit dessous.
+function ecrireMot(cible, mot) {
+  // morceaux[1] = "Zoro", morceaux[2] = "(One Piece)" ; null s'il n'y a pas de parenthèses.
+  const morceaux = mot.match(/^(.*?)\s*(\(.*\))$/);
+  if (!morceaux) {
+    cible.textContent = mot;
+    return;
+  }
+  cible.textContent = morceaux[1];
+  const precision = document.createElement("small");
+  precision.className = "precision";
+  precision.textContent = morceaux[2];
+  cible.appendChild(precision);
+}
+
 // Télécharge la liste des paires depuis words.json.
 // Si ça échoue, on garde la liste déjà chargée.
 async function chargerMots() {
@@ -280,8 +296,8 @@ function retournerCarte() {
 
   carteEnCours.pseudo = pseudo;
   carteEnCours.lue = true;
-  element("mot-affiche").textContent =
-    carteEnCours.role === "mrwhite" ? "Tu es Mr. White" : carteEnCours.mot;
+  ecrireMot(element("mot-affiche"),
+    carteEnCours.role === "mrwhite" ? "Tu es Mr. White" : carteEnCours.mot);
   element("carte").classList.add("retournee");
 
   element("zone-pseudo").hidden = true;
@@ -372,7 +388,7 @@ function afficherFin() {
     dos.textContent = "?";
     const face = document.createElement("div");
     face.className = "face face-mot";
-    face.textContent = carte.role === "mrwhite" ? "Mr. White" : carte.mot;
+    ecrireMot(face, carte.role === "mrwhite" ? "Mr. White" : carte.mot);
     petiteCarte.append(dos, face);
 
     bloc.append(pseudo, petiteCarte);

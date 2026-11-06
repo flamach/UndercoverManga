@@ -288,10 +288,20 @@ button:disabled {
 }
 
 .face-mot {
+  flex-direction: column;
   background: #f5f5fa;
   color: #1e1b2e;
   font-size: 2.4rem;
   transform: rotateY(180deg);
+}
+
+/* Le nom du manga entre parenthèses : deux fois plus petit, sur sa propre ligne */
+.precision {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.5em;
+  font-weight: normal;
+  opacity: 0.7;
 }
 
 /* Petites cartes de l'écran de fin : pseudo au-dessus, carte en dessous */
