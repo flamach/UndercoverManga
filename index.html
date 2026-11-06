@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <!-- Empêche le zoom accidentel sur mobile -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#1e1b2e">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Undercover</title>
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" href="./icons/icon-192.png">
+  <link rel="apple-touch-icon" href="./icons/icon-192.png">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+  <!-- Chaque <section> est un "écran". Un seul est visible à la fois. -->
+
+  <!-- 1. Configuration -->
+  <section id="ecran-config" class="ecran">
+    <header class="entete">
+      <img src="./icons/icon-192.png" alt="" class="logo">
+      <h1 class="titre">Undercover</h1>
+      <p class="slogan">Qui se cache parmi vous ?</p>
+    </header>
+
+    <div class="panneau">
+      <!-- Compteur du nombre de Civils -->
+      <div class="reglage">
+        <div>
+          <p class="reglage-titre">Civils</p>
+          <p class="reglage-aide">Ont tous le même mot</p>
+        </div>
+        <div class="compteur">
+          <button id="moins-civils" class="bouton-rond" aria-label="Un Civil de moins">−</button>
+          <span id="nb-civils" class="valeur">3</span>
+          <button id="plus-civils" class="bouton-rond" aria-label="Un Civil de plus">+</button>
+        </div>
+      </div>
+
+      <!-- Compteur du nombre d'Undercover -->
+      <div class="reglage">
+        <div>
+          <p class="reglage-titre">Undercover</p>
+          <p class="reglage-aide">Ont un mot proche</p>
+        </div>
+        <div class="compteur">
+          <button id="moins-undercover" class="bouton-rond" aria-label="Un Undercover de moins">−</button>
+          <span id="nb-undercover" class="valeur">1</span>
+          <button id="plus-undercover" class="bouton-rond" aria-label="Un Undercover de plus">+</button>
+        </div>
+      </div>
+
+      <!-- Interrupteur Mr. White -->
+      <label class="reglage" for="avec-mr-white">
+        <div>
+          <p class="reglage-titre">Mr. White</p>
+          <p class="reglage-aide">N'a aucun mot, doit bluffer</p>
+        </div>
+        <input type="checkbox" id="avec-mr-white" class="interrupteur">
+      </label>
+    </div>
+
+    <!-- Nombre total de joueurs, mis à jour à chaque changement -->
+    <div class="total">
+      <span id="total-joueurs" class="total-nombre">4</span> joueurs au total
+    </div>
+
+    <p id="erreur-config" class="erreur"></p>
+    <button id="bouton-commencer" class="bouton-principal">Distribuer les cartes</button>
+  </section>
+
+  <!-- 2. Grille des cartes face cachée -->
+  <section id="ecran-cartes" class="ecran" hidden>
+    <h2 id="titre-cartes">Prends le téléphone et choisis une carte</h2>
+    <div id="grille-cartes" class="grille"></div>
+  </section>
+
+  <!-- Roulette : tire au sort le joueur qui commence -->
+  <section id="ecran-roulette" class="ecran" hidden>
+    <h2>Tout le monde a son mot !</h2>
+    <p class="grand-texte">Qui commence ?</p>
+    <div id="roulette" class="roulette">?</div>
+    <button id="bouton-lancer" class="bouton-principal">Lancer</button>
+    <button id="bouton-voir-roles" class="bouton-secondaire">Fin de partie : retourner toutes les cartes</button>
+  </section>
+
+  <!-- 3. Le joueur tape son pseudo puis retourne sa carte -->
+  <section id="ecran-carte" class="ecran" hidden>
+    <div id="zone-pseudo">
+      <label for="champ-pseudo">Ton pseudo</label>
+      <input type="text" id="champ-pseudo" maxlength="20" autocomplete="off">
+      <p id="erreur-pseudo" class="erreur"></p>
+    </div>
+
+    <!-- La carte a deux faces : le dos (visible au départ) et le mot -->
+    <div id="carte" class="carte">
+      <div class="face face-dos">?</div>
+      <div class="face face-mot"><span id="mot-affiche"></span></div>
+    </div>
+
+    <button id="bouton-retourner" class="bouton-principal">Retourner ma carte</button>
+    <button id="bouton-lu" class="bouton-principal" hidden>Lu</button>
+    <button id="bouton-annuler" class="bouton-secondaire">Retour</button>
+  </section>
+
+  <!-- 4. Fin de partie : toutes les cartes retournées -->
+  <section id="ecran-fin" class="ecran" hidden>
+    <h2>Les cartes</h2>
+    <div id="grille-fin" class="grille"></div>
+    <button id="bouton-rejouer" class="bouton-principal">Rejouer</button>
+    <button id="bouton-nouvelle-config" class="bouton-secondaire">Nouvelle configuration</button>
+  </section>
+
+  <script src="./app.js"></script>
+</body>
+</html>

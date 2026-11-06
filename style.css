@@ -1,0 +1,359 @@
+/* ===== Base ===== */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  /* Fond sombre avec une lueur violette en haut */
+  background: radial-gradient(circle at 50% 0%, #3b2a75 0%, #1e1b2e 60%) fixed, #1e1b2e;
+  color: #f5f5fa;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 18px;
+  /* Pas de zoom par double-tap, pas de "flash" gris au toucher */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Un écran prend toute la hauteur du téléphone */
+.ecran {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 100dvh;
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 24px 20px calc(24px + env(safe-area-inset-bottom));
+}
+
+/* L'attribut "hidden" doit vraiment cacher l'élément */
+[hidden] {
+  display: none !important;
+}
+
+h1 {
+  text-align: center;
+  font-size: 2.2rem;
+  margin: 8px 0;
+}
+
+h2 {
+  text-align: center;
+  margin: 8px 0;
+}
+
+label {
+  font-weight: bold;
+  margin-top: 8px;
+}
+
+/* ===== Champs de saisie ===== */
+/* 16px minimum : sinon l'iPhone zoome tout seul sur le champ */
+input[type="text"] {
+  width: 100%;
+  font-size: 1.1rem;
+  padding: 14px;
+  border: 2px solid #3d3758;
+  border-radius: 12px;
+  background: #2a2640;
+  color: inherit;
+}
+
+/* ===== Menu de configuration ===== */
+.entete {
+  text-align: center;
+  margin: 12px 0 8px;
+}
+
+.logo {
+  width: 88px;
+  height: 88px;
+  border-radius: 24px;
+  box-shadow: 0 8px 30px rgba(124, 77, 255, 0.5);
+}
+
+.titre {
+  margin: 12px 0 0;
+  font-size: 2.6rem;
+  letter-spacing: 1px;
+  /* Texte en dégradé */
+  background: linear-gradient(90deg, #c4b1ff, #7c4dff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.slogan {
+  margin: 4px 0 0;
+  color: #a39dbd;
+}
+
+/* Bloc arrondi et translucide qui contient les réglages */
+.panneau {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 4px 16px;
+}
+
+/* Une ligne de réglage : texte à gauche, compteur ou interrupteur à droite */
+.reglage {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 0;
+  margin: 0;
+  font-weight: normal;
+}
+
+.reglage + .reglage {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.reglage-titre {
+  margin: 0;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.reglage-aide {
+  margin: 2px 0 0;
+  font-size: 0.85rem;
+  color: #a39dbd;
+}
+
+.compteur {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.valeur {
+  min-width: 2ch;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.bouton-rond {
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border-radius: 50%;
+  font-size: 1.6rem;
+  line-height: 1;
+  background: #3d3758;
+}
+
+/* Interrupteur : une case à cocher redessinée en "switch" */
+.interrupteur {
+  appearance: none;
+  -webkit-appearance: none;
+  flex-shrink: 0;
+  position: relative;
+  width: 60px;
+  height: 34px;
+  margin: 0;
+  border-radius: 34px;
+  background: #3d3758;
+  transition: background 0.2s;
+}
+
+/* Le petit rond blanc de l'interrupteur */
+.interrupteur::after {
+  content: "";
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 0.2s;
+}
+
+.interrupteur:checked {
+  background: #7c4dff;
+}
+
+.interrupteur:checked::after {
+  transform: translateX(26px);
+}
+
+/* Nombre total de joueurs */
+.total {
+  text-align: center;
+  color: #a39dbd;
+}
+
+.total-nombre {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #c4b1ff;
+}
+
+/* ===== Boutons ===== */
+button {
+  width: 100%;
+  font-size: 1.2rem;
+  font-weight: bold;
+  padding: 18px;
+  border: none;
+  border-radius: 14px;
+  color: #fff;
+  background: #3d3758;
+  user-select: none;
+}
+
+button:active {
+  transform: scale(0.97);
+}
+
+button:disabled {
+  opacity: 0.35;
+}
+
+.bouton-principal {
+  background: linear-gradient(135deg, #9b6dff, #6a3df0);
+  box-shadow: 0 6px 20px rgba(124, 77, 255, 0.4);
+  margin-top: auto;
+}
+
+.bouton-principal:disabled {
+  box-shadow: none;
+}
+
+.bouton-secondaire {
+  background: transparent;
+  border: 2px solid #3d3758;
+}
+
+/* ===== Grille des cartes ===== */
+.grille {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.petite-carte {
+  aspect-ratio: 3 / 4;
+  padding: 6px;
+  font-size: 1.6rem;
+  background: #7c4dff;
+  border: 3px solid #a98bff;
+  word-break: break-word;
+}
+
+/* Carte déjà lue : grisée, avec le pseudo du joueur */
+.petite-carte:disabled {
+  font-size: 1rem;
+  background: #3d3758;
+  border-color: #3d3758;
+}
+
+/* ===== Grande carte qui se retourne ===== */
+.carte {
+  position: relative;
+  width: 80%;
+  aspect-ratio: 3 / 4;
+  margin: 16px auto;
+  transition: transform 0.4s;
+  transform-style: preserve-3d;
+}
+
+.carte.retournee {
+  transform: rotateY(180deg);
+}
+
+.face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  border-radius: 20px;
+  text-align: center;
+  font-weight: bold;
+  word-break: break-word;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.face-dos {
+  background: #7c4dff;
+  border: 4px solid #a98bff;
+  font-size: 5rem;
+}
+
+.face-mot {
+  background: #f5f5fa;
+  color: #1e1b2e;
+  font-size: 2.4rem;
+  transform: rotateY(180deg);
+}
+
+/* Petites cartes de l'écran de fin : pseudo au-dessus, carte en dessous */
+.carte.petite {
+  width: 100%;
+  margin: 0;
+}
+
+.carte.petite .face {
+  padding: 6px;
+  border-radius: 12px;
+  font-size: 1.1rem;
+}
+
+.pseudo {
+  margin: 0 0 6px;
+  text-align: center;
+  font-weight: bold;
+  word-break: break-word;
+}
+
+/* ===== Roulette "Qui commence ?" ===== */
+.roulette {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 160px;
+  margin: auto 0;
+  padding: 16px;
+  border-radius: 24px;
+  border: 3px solid #3d3758;
+  background: rgba(255, 255, 255, 0.05);
+  font-size: 2.6rem;
+  font-weight: bold;
+  text-align: center;
+  word-break: break-word;
+  transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+
+/* Le joueur tiré au sort est mis en valeur */
+.roulette.gagnant {
+  transform: scale(1.06);
+  border-color: #7c4dff;
+  box-shadow: 0 0 40px rgba(124, 77, 255, 0.6);
+  color: #c4b1ff;
+}
+
+#zone-pseudo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ===== Textes ===== */
+.grand-texte {
+  text-align: center;
+  font-size: 1.3rem;
+}
+
+.erreur {
+  color: #ff8a8e;
+  text-align: center;
+  min-height: 1.2em;
+}
+
