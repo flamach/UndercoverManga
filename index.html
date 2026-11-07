@@ -16,27 +16,54 @@
 </head>
 <body>
 
-  <!-- Chaque <section> est un "écran". Un seul est visible à la fois. -->
+  <!-- Chaque <section> est un "écran". Un seul est visible à la fois.
+       Les éléments avec data-texte="..." sont traduits par app.js (voir TEXTES). -->
 
-  <!-- 1. Configuration -->
-  <section id="ecran-config" class="ecran">
+  <!-- 1. Accueil : langue, choix de la catégorie, aide pour installer l'appli -->
+  <section id="ecran-categories" class="ecran">
+    <!-- Choix de la langue -->
+    <div class="langues">
+      <button data-langue="fr">FR</button>
+      <button data-langue="en">EN</button>
+    </div>
+
     <header class="entete">
       <img src="./icons/icon-192.png" alt="" class="logo">
       <h1 class="titre">Undercover</h1>
-      <p class="slogan">Qui se cache parmi vous ?</p>
+      <p class="slogan" data-texte="slogan"></p>
     </header>
+
+    <h2 data-texte="choisisCategorie"></h2>
+    <!-- Les tuiles sont créées par app.js à partir de mots/categories.json -->
+    <div id="grille-categories" class="grille"></div>
+    <p id="erreur-categories" class="erreur"></p>
+
+    <!-- <details> s'ouvre et se ferme tout seul quand on touche le <summary> -->
+    <details id="aide-installation" class="aide-installation">
+      <summary data-texte="installerTitre"></summary>
+      <p data-texte="installerIphone"></p>
+      <p data-texte="installerAndroid"></p>
+    </details>
+  </section>
+
+  <!-- 2. Configuration : nombre de joueurs de chaque rôle -->
+  <section id="ecran-config" class="ecran" hidden>
+    <div class="categorie-choisie">
+      <span id="nom-categorie"></span>
+      <button id="bouton-changer-categorie" class="bouton-lien" data-texte="changer"></button>
+    </div>
 
     <div class="panneau">
       <!-- Compteur du nombre de Civils -->
       <div class="reglage">
         <div>
-          <p class="reglage-titre">Civils</p>
-          <p class="reglage-aide">Ont tous le même mot</p>
+          <p class="reglage-titre" data-texte="civils"></p>
+          <p class="reglage-aide" data-texte="aideCivils"></p>
         </div>
         <div class="compteur">
-          <button id="moins-civils" class="bouton-rond" aria-label="Un Civil de moins">−</button>
+          <button id="moins-civils" class="bouton-rond" aria-label="−">−</button>
           <span id="nb-civils" class="valeur">3</span>
-          <button id="plus-civils" class="bouton-rond" aria-label="Un Civil de plus">+</button>
+          <button id="plus-civils" class="bouton-rond" aria-label="+">+</button>
         </div>
       </div>
 
@@ -44,12 +71,12 @@
       <div class="reglage">
         <div>
           <p class="reglage-titre">Undercover</p>
-          <p class="reglage-aide">Ont un mot proche</p>
+          <p class="reglage-aide" data-texte="aideUndercover"></p>
         </div>
         <div class="compteur">
-          <button id="moins-undercover" class="bouton-rond" aria-label="Un Undercover de moins">−</button>
+          <button id="moins-undercover" class="bouton-rond" aria-label="−">−</button>
           <span id="nb-undercover" class="valeur">1</span>
-          <button id="plus-undercover" class="bouton-rond" aria-label="Un Undercover de plus">+</button>
+          <button id="plus-undercover" class="bouton-rond" aria-label="+">+</button>
         </div>
       </div>
 
@@ -57,7 +84,7 @@
       <label class="reglage" for="avec-mr-white">
         <div>
           <p class="reglage-titre">Mr. White</p>
-          <p class="reglage-aide">N'a aucun mot, doit bluffer</p>
+          <p class="reglage-aide" data-texte="aideMrWhite"></p>
         </div>
         <input type="checkbox" id="avec-mr-white" class="interrupteur">
       </label>
@@ -65,32 +92,32 @@
 
     <!-- Nombre total de joueurs, mis à jour à chaque changement -->
     <div class="total">
-      <span id="total-joueurs" class="total-nombre">4</span> joueurs au total
+      <span id="total-joueurs" class="total-nombre">4</span> <span data-texte="joueursAuTotal"></span>
     </div>
 
     <p id="erreur-config" class="erreur"></p>
-    <button id="bouton-commencer" class="bouton-principal">Distribuer les cartes</button>
+    <button id="bouton-commencer" class="bouton-principal" data-texte="distribuer"></button>
   </section>
 
-  <!-- 2. Grille des cartes face cachée -->
+  <!-- 3. Grille des cartes face cachée -->
   <section id="ecran-cartes" class="ecran" hidden>
-    <h2 id="titre-cartes">Prends le téléphone et choisis une carte</h2>
+    <h2 data-texte="choisisCarte"></h2>
     <div id="grille-cartes" class="grille"></div>
   </section>
 
   <!-- Roulette : tire au sort le joueur qui commence -->
   <section id="ecran-roulette" class="ecran" hidden>
-    <h2>Tout le monde a son mot !</h2>
-    <p class="grand-texte">Qui commence ?</p>
+    <h2 data-texte="toutLeMondeASonMot"></h2>
+    <p class="grand-texte" data-texte="quiCommence"></p>
     <div id="roulette" class="roulette">?</div>
-    <button id="bouton-lancer" class="bouton-principal">Lancer</button>
-    <button id="bouton-voir-roles" class="bouton-secondaire">Fin de partie : retourner toutes les cartes</button>
+    <button id="bouton-lancer" class="bouton-principal"></button>
+    <button id="bouton-voir-roles" class="bouton-secondaire" data-texte="finDePartie"></button>
   </section>
 
-  <!-- 3. Le joueur tape son pseudo puis retourne sa carte -->
+  <!-- 4. Le joueur tape son pseudo puis retourne sa carte -->
   <section id="ecran-carte" class="ecran" hidden>
     <div id="zone-pseudo">
-      <label for="champ-pseudo">Ton pseudo</label>
+      <label for="champ-pseudo" data-texte="tonPseudo"></label>
       <input type="text" id="champ-pseudo" maxlength="20" autocomplete="off">
       <p id="erreur-pseudo" class="erreur"></p>
     </div>
@@ -101,17 +128,17 @@
       <div class="face face-mot"><span id="mot-affiche"></span></div>
     </div>
 
-    <button id="bouton-retourner" class="bouton-principal">Retourner ma carte</button>
-    <button id="bouton-lu" class="bouton-principal" hidden>Lu</button>
-    <button id="bouton-annuler" class="bouton-secondaire">Retour</button>
+    <button id="bouton-retourner" class="bouton-principal" data-texte="retournerCarte"></button>
+    <button id="bouton-lu" class="bouton-principal" data-texte="lu" hidden></button>
+    <button id="bouton-annuler" class="bouton-secondaire" data-texte="retour"></button>
   </section>
 
-  <!-- 4. Fin de partie : toutes les cartes retournées -->
+  <!-- 5. Fin de partie : toutes les cartes retournées -->
   <section id="ecran-fin" class="ecran" hidden>
-    <h2>Les cartes</h2>
+    <h2 data-texte="lesCartes"></h2>
     <div id="grille-fin" class="grille"></div>
-    <button id="bouton-rejouer" class="bouton-principal">Rejouer</button>
-    <button id="bouton-nouvelle-config" class="bouton-secondaire">Nouvelle configuration</button>
+    <button id="bouton-rejouer" class="bouton-principal" data-texte="rejouer"></button>
+    <button id="bouton-nouvelle-config" class="bouton-secondaire" data-texte="nouvelleConfig"></button>
   </section>
 
   <script src="./app.js"></script>

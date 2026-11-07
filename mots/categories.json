@@ -1,0 +1,17 @@
+[
+  { "fichier": "animals",        "emoji": "🐾", "fr": "Animaux",           "en": "Animals" },
+  { "fichier": "food",           "emoji": "🍔", "fr": "Nourriture",        "en": "Food" },
+  { "fichier": "objects",        "emoji": "🧸", "fr": "Objets",            "en": "Objects" },
+  { "fichier": "places",         "emoji": "📍", "fr": "Lieux",             "en": "Places" },
+  { "fichier": "jobs",           "emoji": "💼", "fr": "Métiers",           "en": "Jobs" },
+  { "fichier": "brands",         "emoji": "🏷️", "fr": "Marques",           "en": "Brands" },
+  { "fichier": "movies-tv",      "emoji": "🎬", "fr": "Films & séries",    "en": "Movies & TV" },
+  { "fichier": "manga",          "emoji": "📚", "fr": "Manga",             "en": "Manga" },
+  { "fichier": "superheroes",    "emoji": "🦸", "fr": "Super-héros",       "en": "Superheroes" },
+  { "fichier": "video-games",    "emoji": "🎮", "fr": "Jeux vidéo",        "en": "Video games" },
+  { "fichier": "pokemon",        "emoji": "⚡", "fr": "Pokémon",           "en": "Pokémon" },
+  { "fichier": "football",       "emoji": "⚽", "fr": "Football",          "en": "Football" },
+  { "fichier": "french-rappers", "emoji": "🎤", "fr": "Rappeurs français", "en": "French rappers" },
+  { "fichier": "us-rappers",     "emoji": "🎧", "fr": "Rappeurs US",       "en": "US rappers" },
+  { "fichier": "australia",      "emoji": "🦘", "fr": "Australie",         "en": "Australia" }
+]

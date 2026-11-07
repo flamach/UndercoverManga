@@ -10,18 +10,126 @@ const NB_PAIRES_A_EVITER = 10;
 const NB_CIVILS_MIN = 2;     // avec 1 infiltré, il faut au moins 2 Civils (donc 3 joueurs)
 const NB_JOUEURS_MAX = 20;
 const NB_UNDERCOVER_MAX = 9; // avec 20 joueurs, au maximum 9 infiltrés
+const CLE_LANGUE = "undercover-langue";                 // langue choisie
+
+// ----- Tous les textes de l'appli, en français et en anglais -----
+// Les {mots} entre accolades sont remplacés par des valeurs (voir la fonction t).
+const TEXTES = {
+  fr: {
+    slogan: "Qui se cache parmi vous ?",
+    civils: "Civils",
+    aideCivils: "Ont tous le même mot",
+    aideUndercover: "Ont un mot proche",
+    aideMrWhite: "N'a aucun mot, doit bluffer",
+    joueursAuTotal: "joueurs au total",
+    distribuer: "Distribuer les cartes",
+    erreurAucunInfiltre: "Il faut au moins un Undercover ou Mr. White.",
+    erreurPasAssezDeCivils: "Il faut plus de Civils ({civils}) que d'infiltrés ({infiltres}).",
+    erreurTropDeJoueurs: "{max} joueurs maximum.",
+    erreurMots: "Impossible de charger la liste de mots.",
+    choisisCarte: "Prends le téléphone et choisis une carte",
+    tonPseudo: "Ton pseudo",
+    erreurPseudoVide: "Écris ton pseudo d'abord.",
+    erreurPseudoPris: "Ce pseudo est déjà pris.",
+    retournerCarte: "Retourner ma carte",
+    lu: "Lu",
+    retour: "Retour",
+    tuEsMrWhite: "Tu es Mr. White",
+    toutLeMondeASonMot: "Tout le monde a son mot !",
+    quiCommence: "Qui commence ?",
+    lancer: "Lancer",
+    relancer: "Relancer",
+    finDePartie: "Fin de partie : retourner toutes les cartes",
+    lesCartes: "Les cartes",
+    rejouer: "Rejouer",
+    nouvelleConfig: "Nouvelle configuration",
+    choisisCategorie: "Choisis une catégorie",
+    erreurCategories: "Impossible de charger les catégories.",
+    changer: "Changer",
+    installerTitre: "📲 Installer l'appli sur ton téléphone",
+    installerIphone: "iPhone : ouvre le site dans Safari → bouton Partager → « Sur l'écran d'accueil ».",
+    installerAndroid: "Android : ouvre le site dans Chrome → menu ⋮ → « Installer l'application »."
+  },
+  en: {
+    slogan: "Who's hiding among you?",
+    civils: "Civilians",
+    aideCivils: "All share the same word",
+    aideUndercover: "Have a similar word",
+    aideMrWhite: "Has no word, must bluff",
+    joueursAuTotal: "players in total",
+    distribuer: "Deal the cards",
+    erreurAucunInfiltre: "You need at least one Undercover or Mr. White.",
+    erreurPasAssezDeCivils: "You need more Civilians ({civils}) than infiltrators ({infiltres}).",
+    erreurTropDeJoueurs: "{max} players maximum.",
+    erreurMots: "Could not load the word list.",
+    choisisCarte: "Take the phone and pick a card",
+    tonPseudo: "Your nickname",
+    erreurPseudoVide: "Enter your nickname first.",
+    erreurPseudoPris: "This nickname is already taken.",
+    retournerCarte: "Flip my card",
+    lu: "Got it",
+    retour: "Back",
+    tuEsMrWhite: "You are Mr. White",
+    toutLeMondeASonMot: "Everyone has their word!",
+    quiCommence: "Who starts?",
+    lancer: "Spin",
+    relancer: "Spin again",
+    finDePartie: "End of game: flip all the cards",
+    lesCartes: "The cards",
+    rejouer: "Play again",
+    nouvelleConfig: "New setup",
+    choisisCategorie: "Pick a category",
+    erreurCategories: "Could not load the categories.",
+    changer: "Change",
+    installerTitre: "📲 Install the app on your phone",
+    installerIphone: "iPhone: open the site in Safari → Share button → “Add to Home Screen”.",
+    installerAndroid: "Android: open the site in Chrome → ⋮ menu → “Install app”."
+  }
+};
 
 // ----- État de la partie en cours -----
-let toutesLesPaires = [];  // les paires lues dans words.json
+let categories = [];        // la liste lue dans mots/categories.json
+let categorieChoisie = null; // ex : { fichier: "animals", emoji: "🐾", fr: "Animaux", en: "Animals" }
+let toutesLesPaires = [];  // les paires de la catégorie choisie
 let config = null;         // { nbCivils: 3, nbUndercover: 1, avecMrWhite: true, nbJoueurs: 5 }
 let cartes = [];           // chaque carte : { role, mot, pseudo, lue }
 let motDesCivils = "";
 let motDesUndercover = "";
 let carteEnCours = null;   // carte que le joueur est en train de regarder
+let langue = localStorage.getItem(CLE_LANGUE) || "fr"; // français par défaut
 
 // Raccourci pour récupérer un élément de la page par son id.
 function element(id) {
   return document.getElementById(id);
+}
+
+// Renvoie le texte "cle" dans la langue choisie.
+// Exemple : t("erreurTropDeJoueurs", { max: 20 }) donne "20 joueurs maximum."
+function t(cle, valeurs) {
+  let texte = TEXTES[langue][cle];
+  for (const nom in valeurs) {
+    texte = texte.replace("{" + nom + "}", valeurs[nom]);
+  }
+  return texte;
+}
+
+// Change la langue, la mémorise, puis traduit tous les éléments
+// qui ont un attribut data-texte="...".
+function changerLangue(nouvelleLangue) {
+  langue = nouvelleLangue;
+  localStorage.setItem(CLE_LANGUE, langue);
+  document.documentElement.lang = langue;
+
+  document.querySelectorAll("[data-texte]").forEach(function (el) {
+    el.textContent = t(el.dataset.texte);
+  });
+  // Met en valeur le bouton de la langue choisie.
+  document.querySelectorAll(".langues button").forEach(function (bouton) {
+    bouton.classList.toggle("active", bouton.dataset.langue === langue);
+  });
+  // Les noms des catégories et le message d'erreur du menu dépendent de la langue.
+  construireTuilesCategories();
+  mettreAJourResume();
 }
 
 // Cache tous les écrans puis affiche seulement celui demandé.
@@ -71,15 +179,59 @@ function ecrireMot(cible, mot) {
   cible.appendChild(precision);
 }
 
-// Télécharge la liste des paires depuis words.json.
-// Si ça échoue, on garde la liste déjà chargée.
+// Télécharge les paires de la catégorie choisie, dans la langue choisie.
+// Exemple : ./mots/fr/animals.json
 async function chargerMots() {
+  toutesLesPaires = [];
   try {
-    const reponse = await fetch("./words.json");
+    const reponse = await fetch("./mots/" + langue + "/" + categorieChoisie.fichier + ".json");
     toutesLesPaires = await reponse.json();
   } catch (erreur) {
-    console.log("Impossible de charger words.json", erreur);
+    console.log("Impossible de charger les mots", erreur);
   }
+}
+
+// ============================================================
+// Écran d'accueil : choix de la catégorie
+// ============================================================
+
+// Télécharge la liste des catégories (mots/categories.json) puis crée les tuiles.
+async function chargerCategories() {
+  try {
+    const reponse = await fetch("./mots/categories.json");
+    categories = await reponse.json();
+  } catch (erreur) {
+    console.log("Impossible de charger les catégories", erreur);
+  }
+  construireTuilesCategories();
+  element("erreur-categories").textContent = categories.length === 0 ? t("erreurCategories") : "";
+}
+
+// Crée une tuile (emoji + nom dans la langue choisie) par catégorie.
+function construireTuilesCategories() {
+  const grille = element("grille-categories");
+  grille.innerHTML = "";
+  categories.forEach(function (categorie) {
+    const bouton = document.createElement("button");
+    bouton.className = "tuile-categorie";
+    const emoji = document.createElement("span");
+    emoji.className = "emoji";
+    emoji.textContent = categorie.emoji;
+    bouton.append(emoji, categorie[langue]);
+    bouton.addEventListener("click", function () { choisirCategorie(categorie); });
+    grille.appendChild(bouton);
+  });
+}
+
+// Affiche l'écran d'accueil avec les catégories.
+function afficherCategories() {
+  afficherEcran("ecran-categories");
+}
+
+// Mémorise la catégorie touchée puis passe au réglage des joueurs.
+function choisirCategorie(categorie) {
+  categorieChoisie = categorie;
+  afficherConfiguration();
 }
 
 // Choisit une paire au hasard en évitant les 10 dernières jouées,
@@ -169,6 +321,7 @@ function afficherConfiguration() {
   element("nb-civils").textContent = sauvegarde.nbCivils;
   element("nb-undercover").textContent = sauvegarde.nbUndercover;
   element("avec-mr-white").checked = sauvegarde.avecMrWhite;
+  element("nom-categorie").textContent = categorieChoisie.emoji + " " + categorieChoisie[langue];
   mettreAJourResume();
   afficherEcran("ecran-config");
 }
@@ -179,13 +332,13 @@ function verifierConfiguration(nouvelleConfig) {
   const nbCivils = nouvelleConfig.nbJoueurs - nbInfiltres;
 
   if (nbInfiltres === 0) {
-    return "Il faut au moins un Undercover ou Mr. White.";
+    return t("erreurAucunInfiltre");
   }
   if (nbCivils <= nbInfiltres) {
-    return "Il faut plus de Civils (" + nbCivils + ") que d'infiltrés (" + nbInfiltres + ").";
+    return t("erreurPasAssezDeCivils", { civils: nbCivils, infiltres: nbInfiltres });
   }
   if (nouvelleConfig.nbJoueurs > NB_JOUEURS_MAX) {
-    return NB_JOUEURS_MAX + " joueurs maximum.";
+    return t("erreurTropDeJoueurs", { max: NB_JOUEURS_MAX });
   }
   return "";
 }
@@ -212,7 +365,7 @@ function validerConfiguration() {
 async function demarrerPartie() {
   await chargerMots();
   if (toutesLesPaires.length === 0) {
-    element("erreur-config").textContent = "Impossible de charger la liste de mots.";
+    element("erreur-config").textContent = t("erreurMots");
     afficherEcran("ecran-config");
     return;
   }
@@ -278,11 +431,11 @@ function ouvrirCarte(carte) {
 // Vérifie le pseudo : il ne doit pas être vide ni déjà pris.
 // Renvoie un message d'erreur, ou "" si tout va bien.
 function verifierPseudo(pseudo) {
-  if (pseudo === "") return "Écris ton pseudo d'abord.";
+  if (pseudo === "") return t("erreurPseudoVide");
   const dejaPris = cartes.some(function (carte) {
     return carte.lue && normaliser(carte.pseudo) === normaliser(pseudo);
   });
-  if (dejaPris) return "Ce pseudo est déjà pris.";
+  if (dejaPris) return t("erreurPseudoPris");
   return "";
 }
 
@@ -297,7 +450,7 @@ function retournerCarte() {
   carteEnCours.pseudo = pseudo;
   carteEnCours.lue = true;
   ecrireMot(element("mot-affiche"),
-    carteEnCours.role === "mrwhite" ? "Tu es Mr. White" : carteEnCours.mot);
+    carteEnCours.role === "mrwhite" ? t("tuEsMrWhite") : carteEnCours.mot);
   element("carte").classList.add("retournee");
 
   element("zone-pseudo").hidden = true;
@@ -327,7 +480,7 @@ function afficherRoulette() {
   element("roulette").textContent = "?";
   element("roulette").classList.remove("gagnant");
   element("bouton-lancer").disabled = false;
-  element("bouton-lancer").textContent = "Lancer";
+  element("bouton-lancer").textContent = t("lancer");
   afficherEcran("ecran-roulette");
 }
 
@@ -357,7 +510,7 @@ function lancerRoulette() {
     } else {
       element("roulette").classList.add("gagnant");
       element("bouton-lancer").disabled = false;
-      element("bouton-lancer").textContent = "Relancer";
+      element("bouton-lancer").textContent = t("relancer");
     }
   }
 
@@ -420,9 +573,19 @@ element("bouton-annuler").addEventListener("click", afficherGrille);
 element("bouton-lancer").addEventListener("click", lancerRoulette);
 element("bouton-voir-roles").addEventListener("click", afficherFin);
 element("bouton-rejouer").addEventListener("click", demarrerPartie);
-element("bouton-nouvelle-config").addEventListener("click", afficherConfiguration);
+element("bouton-nouvelle-config").addEventListener("click", afficherCategories);
+element("bouton-changer-categorie").addEventListener("click", afficherCategories);
+document.querySelectorAll(".langues button").forEach(function (bouton) {
+  bouton.addEventListener("click", function () { changerLangue(bouton.dataset.langue); });
+});
 
-afficherConfiguration();
+// Si l'appli est déjà installée sur l'écran d'accueil, l'aide à l'installation est inutile.
+const estInstallee = window.matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+element("aide-installation").hidden = estInstallee;
+
+changerLangue(langue);
+afficherCategories();
+chargerCategories();
 
 // Active le mode hors ligne (service worker).
 if ("serviceWorker" in navigator) {
