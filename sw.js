@@ -5,7 +5,7 @@
 // 👉 Change ce numéro (v2, v3...) à chaque fois que tu modifies
 // index.html, style.css ou app.js, ou que tu ajoutes une catégorie,
 // pour forcer la mise à jour du cache.
-const VERSION_DU_CACHE = "undercover-v11";
+const VERSION_DU_CACHE = "undercover-v12";
 const LANGUES = ["fr", "en"];
 
 // Liste des fichiers de l'appli à garder en mémoire pour le mode hors ligne.

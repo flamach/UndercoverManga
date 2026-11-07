@@ -579,10 +579,6 @@ document.querySelectorAll(".langues button").forEach(function (bouton) {
   bouton.addEventListener("click", function () { changerLangue(bouton.dataset.langue); });
 });
 
-// Si l'appli est déjà installée sur l'écran d'accueil, l'aide à l'installation est inutile.
-const estInstallee = window.matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
-element("aide-installation").hidden = estInstallee;
-
 changerLangue(langue);
 afficherCategories();
 chargerCategories();
